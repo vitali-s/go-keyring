@@ -73,6 +73,128 @@ func main() {
 
 ```
 
+## Direct CLI Usage
+
+While this library provides a convenient Go API, you can also interact with the system keyring directly using OS-specific command-line tools. This can be useful for debugging, scripting, or understanding what the library does under the hood.
+
+### macOS
+
+macOS uses the `security` command to interact with the Keychain.
+
+**Set a password:**
+```bash
+security add-generic-password -U -s "my-app" -a "anon" -w "secret"
+```
+
+**Get a password:**
+```bash
+security find-generic-password -s "my-app" -wa "anon"
+```
+
+**Delete a password:**
+```bash
+security delete-generic-password -s "my-app" -a "anon"
+```
+
+Where:
+- `-s` specifies the service name
+- `-a` specifies the account/username
+- `-w` specifies the password to store
+- `-U` updates the password if it already exists
+- The `w` option in `-wa` outputs only the password value
+
+### Linux and *BSD
+
+Linux and *BSD systems use the Secret Service API via D-Bus. The easiest way to interact with it from the command line is using `secret-tool`, which is part of libsecret.
+
+**Install secret-tool (if not already installed):**
+```bash
+# Debian/Ubuntu
+sudo apt-get install libsecret-tools
+
+# Fedora/RHEL
+sudo dnf install libsecret
+
+# Arch Linux
+sudo pacman -S libsecret
+```
+
+**Set a password:**
+```bash
+secret-tool store --label="Password for 'anon' on 'my-app'" service "my-app" username "anon"
+# You'll be prompted to enter the password
+```
+
+Or provide the password directly:
+```bash
+echo -n "secret" | secret-tool store --label="Password for 'anon' on 'my-app'" service "my-app" username "anon"
+```
+
+**Get a password:**
+```bash
+secret-tool lookup service "my-app" username "anon"
+```
+
+**Delete a password:**
+```bash
+secret-tool clear service "my-app" username "anon"
+```
+
+Note: The `service` and `username` are attributes used to identify the secret. The label is a human-readable description.
+
+### Windows
+
+Windows uses the Credential Manager, which can be accessed via `cmdkey` or PowerShell.
+
+**Using cmdkey:**
+
+**Set a password:**
+```cmd
+cmdkey /generic:"my-app:anon" /user:"anon" /pass:"secret"
+```
+
+**Get a password:**
+
+`cmdkey` doesn't support retrieving passwords directly. Use PowerShell instead:
+```powershell
+$cred = Get-StoredCredential -Target "my-app:anon"
+$cred.GetNetworkCredential().Password
+```
+
+Or using the Windows API via PowerShell:
+```powershell
+[System.Net.NetworkCredential]::new("", (Get-StoredCredential -Target "my-app:anon").Password).Password
+```
+
+**Delete a password:**
+```cmd
+cmdkey /delete:"my-app:anon"
+```
+
+**Using PowerShell with CredentialManager module:**
+
+First, install the CredentialManager module:
+```powershell
+Install-Module -Name CredentialManager -Force
+```
+
+**Set a password:**
+```powershell
+New-StoredCredential -Target "my-app:anon" -UserName "anon" -Password "secret" -Type Generic -Persist LocalMachine
+```
+
+**Get a password:**
+```powershell
+(Get-StoredCredential -Target "my-app:anon").GetNetworkCredential().Password
+```
+
+**Delete a password:**
+```powershell
+Remove-StoredCredential -Target "my-app:anon"
+```
+
+Note: On Windows, the library combines the service and username as `service:username` for the credential target name.
+
 ## Tests
 
 ### Running tests

@@ -75,7 +75,7 @@ func main() {
 
 ## Direct CLI Usage
 
-While this library provides a convenient Go API, you can also interact with the system keyring directly using OS-specific command-line tools. This can be useful for debugging, scripting, or understanding what the library does under the hood.
+While this library provides a convenient Go API, you can also interact with the system keyring directly using OS-specific command-line tools. This can be useful for debugging, scripting, or understanding what the library does under the hood. You can use the CLI to set-up the secrets from a script and then access them from Go, or vice-versa.
 
 ### macOS
 
@@ -83,19 +83,16 @@ macOS uses the `security` command to interact with the Keychain.
 
 **Set a password:**
 ```bash
-# Equivalent Go: keyring.Set("service", "user", "password")
 security add-generic-password -U -s "service" -a "user" -w "password"
 ```
 
 **Get a password:**
 ```bash
-# Equivalent Go: keyring.Get("service", "user")
 security find-generic-password -s "service" -wa "user"
 ```
 
 **Delete a password:**
 ```bash
-# Equivalent Go: keyring.Delete("service", "user")
 security delete-generic-password -s "service" -a "user"
 ```
 
@@ -124,26 +121,22 @@ sudo pacman -S libsecret
 
 **Set a password:**
 ```bash
-# Equivalent Go: keyring.Set("service", "user", "password")
 secret-tool store --label="Password for 'user' on 'service'" service "service" username "user"
 # You'll be prompted to enter the password
 ```
 
 Or provide the password directly:
 ```bash
-# Equivalent Go: keyring.Set("service", "user", "password")
 echo -n "password" | secret-tool store --label="Password for 'user' on 'service'" service "service" username "user"
 ```
 
 **Get a password:**
 ```bash
-# Equivalent Go: keyring.Get("service", "user")
 secret-tool lookup service "service" username "user"
 ```
 
 **Delete a password:**
 ```bash
-# Equivalent Go: keyring.Delete("service", "user")
 secret-tool clear service "service" username "user"
 ```
 
@@ -157,7 +150,6 @@ Windows uses the Credential Manager, which can be accessed via `cmdkey` or Power
 
 **Set a password:**
 ```cmd
-REM Equivalent Go: keyring.Set("service", "user", "password")
 cmdkey /generic:"service:user" /user:"user" /pass:"password"
 ```
 
@@ -165,20 +157,17 @@ cmdkey /generic:"service:user" /user:"user" /pass:"password"
 
 `cmdkey` doesn't support retrieving passwords directly. Use PowerShell instead:
 ```powershell
-# Equivalent Go: keyring.Get("service", "user")
 $cred = Get-StoredCredential -Target "service:user"
 $cred.GetNetworkCredential().Password
 ```
 
 Or using the Windows API via PowerShell:
 ```powershell
-# Equivalent Go: keyring.Get("service", "user")
 [System.Net.NetworkCredential]::new("", (Get-StoredCredential -Target "service:user").Password).Password
 ```
 
 **Delete a password:**
 ```cmd
-REM Equivalent Go: keyring.Delete("service", "user")
 cmdkey /delete:"service:user"
 ```
 
@@ -191,19 +180,16 @@ Install-Module -Name CredentialManager -Force
 
 **Set a password:**
 ```powershell
-# Equivalent Go: keyring.Set("service", "user", "password")
 New-StoredCredential -Target "service:user" -UserName "user" -Password "password" -Type Generic -Persist LocalMachine
 ```
 
 **Get a password:**
 ```powershell
-# Equivalent Go: keyring.Get("service", "user")
 (Get-StoredCredential -Target "service:user").GetNetworkCredential().Password
 ```
 
 **Delete a password:**
 ```powershell
-# Equivalent Go: keyring.Delete("service", "user")
 Remove-StoredCredential -Target "service:user"
 ```
 

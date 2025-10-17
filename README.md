@@ -83,16 +83,19 @@ macOS uses the `security` command to interact with the Keychain.
 
 **Set a password:**
 ```bash
+# Equivalent Go: keyring.Set("my-app", "anon", "secret")
 security add-generic-password -U -s "my-app" -a "anon" -w "secret"
 ```
 
 **Get a password:**
 ```bash
+# Equivalent Go: keyring.Get("my-app", "anon")
 security find-generic-password -s "my-app" -wa "anon"
 ```
 
 **Delete a password:**
 ```bash
+# Equivalent Go: keyring.Delete("my-app", "anon")
 security delete-generic-password -s "my-app" -a "anon"
 ```
 
@@ -121,22 +124,26 @@ sudo pacman -S libsecret
 
 **Set a password:**
 ```bash
+# Equivalent Go: keyring.Set("my-app", "anon", "secret")
 secret-tool store --label="Password for 'anon' on 'my-app'" service "my-app" username "anon"
 # You'll be prompted to enter the password
 ```
 
 Or provide the password directly:
 ```bash
+# Equivalent Go: keyring.Set("my-app", "anon", "secret")
 echo -n "secret" | secret-tool store --label="Password for 'anon' on 'my-app'" service "my-app" username "anon"
 ```
 
 **Get a password:**
 ```bash
+# Equivalent Go: keyring.Get("my-app", "anon")
 secret-tool lookup service "my-app" username "anon"
 ```
 
 **Delete a password:**
 ```bash
+# Equivalent Go: keyring.Delete("my-app", "anon")
 secret-tool clear service "my-app" username "anon"
 ```
 
@@ -150,6 +157,7 @@ Windows uses the Credential Manager, which can be accessed via `cmdkey` or Power
 
 **Set a password:**
 ```cmd
+REM Equivalent Go: keyring.Set("my-app", "anon", "secret")
 cmdkey /generic:"my-app:anon" /user:"anon" /pass:"secret"
 ```
 
@@ -157,17 +165,20 @@ cmdkey /generic:"my-app:anon" /user:"anon" /pass:"secret"
 
 `cmdkey` doesn't support retrieving passwords directly. Use PowerShell instead:
 ```powershell
+# Equivalent Go: keyring.Get("my-app", "anon")
 $cred = Get-StoredCredential -Target "my-app:anon"
 $cred.GetNetworkCredential().Password
 ```
 
 Or using the Windows API via PowerShell:
 ```powershell
+# Equivalent Go: keyring.Get("my-app", "anon")
 [System.Net.NetworkCredential]::new("", (Get-StoredCredential -Target "my-app:anon").Password).Password
 ```
 
 **Delete a password:**
 ```cmd
+REM Equivalent Go: keyring.Delete("my-app", "anon")
 cmdkey /delete:"my-app:anon"
 ```
 
@@ -180,16 +191,19 @@ Install-Module -Name CredentialManager -Force
 
 **Set a password:**
 ```powershell
+# Equivalent Go: keyring.Set("my-app", "anon", "secret")
 New-StoredCredential -Target "my-app:anon" -UserName "anon" -Password "secret" -Type Generic -Persist LocalMachine
 ```
 
 **Get a password:**
 ```powershell
+# Equivalent Go: keyring.Get("my-app", "anon")
 (Get-StoredCredential -Target "my-app:anon").GetNetworkCredential().Password
 ```
 
 **Delete a password:**
 ```powershell
+# Equivalent Go: keyring.Delete("my-app", "anon")
 Remove-StoredCredential -Target "my-app:anon"
 ```
 

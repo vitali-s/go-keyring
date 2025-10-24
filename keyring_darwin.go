@@ -84,9 +84,6 @@ func (k macOSXKeychain) Set(service, username, password string) error {
 	}
 
 	command := fmt.Sprintf("add-generic-password -U -s %s -a %s -w %s\n", shellescape.Quote(service), shellescape.Quote(username), shellescape.Quote(password))
-	if len(command) > 4096 {
-		return ErrSetDataTooBig
-	}
 
 	if _, err := io.WriteString(stdIn, command); err != nil {
 		return err

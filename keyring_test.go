@@ -24,7 +24,7 @@ func TestSetTooLong(t *testing.T) {
 	extraLongPassword := "ba" + strings.Repeat("na", 5000)
 	err := Set(service, user, extraLongPassword)
 
-	if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
+	if runtime.GOOS == "windows" {
 		// should fail on those platforms
 		if err != ErrSetDataTooBig {
 			t.Errorf("Should have failed, got: %s", err)

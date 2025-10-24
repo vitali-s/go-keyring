@@ -11,7 +11,7 @@ var (
 	// keyring.
 	ErrNotFound = errors.New("secret not found in keyring")
 	// ErrSetDataTooBig is returned if `Set` was called with too much data.
-	// On MacOS: The combination of service, username & password should not exceed ~3000 bytes
+	// On MacOS: Limitation has been removed
 	// On Windows: The service is limited to 32KiB while the password is limited to 2560 bytes
 	// On Linux/Unix: There is no theoretical limit but performance suffers with big values (>100KiB)
 	ErrSetDataTooBig = errors.New("data passed to Set was too big")

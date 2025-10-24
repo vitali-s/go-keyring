@@ -1,4 +1,4 @@
-module github.com/zalando/go-keyring
+module github.com/vitali-s/go-keyring
 
 go 1.25.1
 

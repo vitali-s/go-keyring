@@ -48,7 +48,7 @@ package main
 import (
     "log"
 
-    "github.com/zalando/go-keyring"
+    "github.com/vitali-s/go-keyring"
 )
 
 func main() {
@@ -219,7 +219,7 @@ package implementation
 import (
     "testing"
 
-    "github.com/zalando/go-keyring"
+    "github.com/vitali-s/go-keyring"
 )
 
 func TestMockedSetGet(t *testing.T) {
